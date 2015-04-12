@@ -24,7 +24,7 @@ vissim.LoadNet(rutaRed)
 
 print "Recuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
-    print " +Procesando SignalController '"+sc.AttValue('Name')+"' ..."
+    print " \n+Procesando SignalController '"+sc.AttValue('Name')+"' ..."
     for sg in sc.SGs:
         print " ++Procesando SignalGroup '"+sg.AttValue('Name')+"' ..."
 
