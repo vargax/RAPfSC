@@ -5,7 +5,7 @@ __author__ = 'cvargasc'
 # Imports
 # ------------------------
 import win32com.client as com
-from Interseccion import Interseccion
+from Clases import Interseccion
 import os
 
 # ------------------------
