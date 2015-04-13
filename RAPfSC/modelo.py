@@ -30,17 +30,24 @@ class ModeloSolucion:
             ## cEntrada.ocupacion sera el flujo que necesita pasar
             ## rest.. cEntrada<=1-sum((i),cSalida(i).ocupacion)
             ## prioridad=((cEntrada+(1-csalida))*cEntrada)/maximo
-            sumCapacidadSalida=0
+            minCapacidadSalida=1
             for idSalida in listSalida.items():
                 socupacion=Interseccion.carrilesSalida[id]#ocupacion entre 0 y 1
                 scapacidad=1-socupacion #la capaciidad de un carril de salida
-                sumCapacidadSalida+=scapacidad
+                if scapacidad < minCapacidadSalida:
+                    minCapacidadSalida=min(minCapacidadSalida,scapacidad)
 
-             ## calculamos la maxima prioridad entre el carril de entrada y todos sus carriles salida VER archivo GAMS
-            max=((10**len(listSalida))+10)*10
-            ## calculamos prioridad de cruce
-            cEntrada=Interseccion.carrilesEntrada[idEntrada]
-            prioridad=((sumCapacidadSalida+cEntrada)*cEntrada)/max
+
+             ## calculamos la maxima prioridad entre el carril de entrada y el minimo carril de gams VER archivo GAMS
+            if cEntrada > minCapacidadSalida:
+                prioridad=0;
+            else:
+                max=2
+                ## calculamos prioridad de cruce
+                cEntrada=Interseccion.carrilesEntrada[idEntrada]
+                prioridad=((minCapacidadSalida+cEntrada)*cEntrada)/max
+
+
             ##agregamos al diccionario id del cruce como llave y su prioridad
             self.listPrioridadesCruces[id]=prioridad
 
