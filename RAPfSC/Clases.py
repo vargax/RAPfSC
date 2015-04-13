@@ -77,7 +77,7 @@ class Interseccion:
     # ------------------------
     # Método encargado de calcular los grupos de cruces que se pueden habilitar simultáneamente
     def __calcularGrupos(self):
-        self.__crucesCompatibles()
+        self.grupos = self.__crucesCompatibles()
 
     # Dos cruces son compatibles si ninguno de sus segmentos se cortan
     def __crucesCompatibles(self):
@@ -89,7 +89,7 @@ class Interseccion:
             compatibles[idCruce] = [] # Inicializo la lista de cruces compatibles para todos los cruces
 
         for idCruce, cruce in cruces.items():
-            #del cruces[idCruce]  # Saco el cruce actual de la lista de cruces que estoy recorriendo
+            del cruces[idCruce]  # Saco el cruce actual de la lista de cruces que estoy recorriendo
 
             segmentosCruce = self.__generarSegmentos(idCruce)
             for idCandidato, candidato in cruces.items():
@@ -113,7 +113,7 @@ class Interseccion:
                 # La compativilidad es simétrica
                 print " +++ Cruces "+idCruce+" y "+idCandidato+" son compatibles!"
                 compatibles[idCruce].append(idCandidato)
-                #compatibles[idCandidato].append(idCruce)
+                compatibles[idCandidato].append(idCruce)
 
         for idCruce, crucesCompatibles in compatibles.items():
             print " +++ El cruce "+idCruce+" cuenta con "+str(len(crucesCompatibles))+" cruces compatibles:"
