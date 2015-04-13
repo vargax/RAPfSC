@@ -33,7 +33,7 @@ class ModeloSolucion:
             ## rest.. cEntrada<=1-sum((i),cSalida(i).ocupacion)
             ## prioridad=((cEntrada+(1-csalida))*cEntrada)/maximo
             minCapacidadSalida=1
-            for idSalida in listSalida.items():
+            for idSalida in listSalida:
                 socupacion=self.interseccion.carrilesSalida[id]#ocupacion entre 0 y 1
                 scapacidad=1-socupacion #la capaciidad de un carril de salida
                 if scapacidad < minCapacidadSalida:
