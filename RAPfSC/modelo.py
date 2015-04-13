@@ -1,4 +1,4 @@
-import Interseccion
+from Clases import Interseccion
 
 __author__ = 'tizon'
 
