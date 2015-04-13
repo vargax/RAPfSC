@@ -4,9 +4,10 @@ __author__ = 'cvargasc'
 # Imports
 # ------------------------
 import win32com.client as com
+import os
 from Clases import Interseccion
 from modelo import ModeloSolucion
-import os
+import escenario
 
 # ------------------------
 # CONSTANTES
@@ -39,5 +40,5 @@ for iteracion in range(0,ITERACIONES):
     for pasos in range(0,PASOS_ENTRE_ITERACIONES):
         vissim.Simulation.RunSingleStep()
     for idInterseccion, interseccion in intersecciones.items():
-
+        escenario.actualizarOcupaciones(interseccion)
         ModeloSolucion(interseccion)

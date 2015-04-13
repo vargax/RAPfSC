@@ -29,7 +29,11 @@ class Interseccion:
     cruces = {}
 
     # Conjuntos de cruces que se pueden habilitar simultáneamente
-    grupos = {}
+    grupos = {
+        0: ['0,1;1,0:0,-1', '1,0;0,1'],
+        1: ['0,-1;0,1:1,0', '1,0;0,1'],
+        2: ['0,-1;0,1:1,0']
+    }
 
     # ------------------------
     # Constructor
@@ -59,6 +63,7 @@ class Interseccion:
                     self.maxVhCarrilesSalida[carrilSalida] = 1 # La cantidad máxima de vehículos vistos en ese carril se inicializa en 1
 
             self.cruces[id] = [sg,carrilEntrada,carrilesSalida]
+            print self.cruces[id]
 
         # Llamo el método para calcular los grupos de cruces que se pueden habilitar simultáneamente
         self.__calcularGrupos()
@@ -95,14 +100,14 @@ class Interseccion:
                     for segmentoCandidato in segmentosCandidato:
                         if self.__segmentosSeCortan(segmentoCruce,segmentoCandidato):
                             sonCompatibles = False
-                            print "rompo for 1 :: ",segmentoCandidato
+                            #print "rompo for 1 :: ",segmentoCandidato
                             break
                     if not sonCompatibles:
-                        print "rompo for 2 :: ",segmentoCruce
+                        #print "rompo for 2 :: ",segmentoCruce
                         break
 
                 if not sonCompatibles:
-                    print "rompo for 3 :: ",idCandidato
+                    #print "rompo for 3 :: ",idCandidato
                     break
             else:
                 # La compativilidad es simétrica
