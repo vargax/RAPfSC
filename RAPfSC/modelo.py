@@ -98,6 +98,7 @@ class ModeloSolucion:
 
     def _activarGrupo(self,idgrupo):
         cruces=Interseccion.grupos[idgrupo]
+        print "#\n#\n#\n#\n#\n#\n#\n#\n#### id del grupo prioritario es "+idgrupo+" y su prioridad es: "+ self.listPrioridadesGrupos[idgrupo]
         for id,cruce in cruces.item():
              cruce[0].SetAttValue("State","GREEN")#signal controller: todos los cruces del grupo se ponen en verde:grupo con mayor prioridad
 
