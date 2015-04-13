@@ -29,11 +29,8 @@ class Interseccion:
     cruces = {}
 
     # Conjuntos de cruces que se pueden habilitar simultáneamente
-    grupos = {
-        0: ['0,1;1,0:0,-1', '1,0;0,1'],
-        1: ['0,-1;0,1:1,0', '1,0;0,1'],
-        2: ['0,-1;0,1:1,0']
-    }
+    grupos = {}
+
 
     # ------------------------
     # Constructor

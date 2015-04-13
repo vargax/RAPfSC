@@ -4,10 +4,11 @@ import random
 __author__ = 'cvargasc'
 
 def actualizarOcupaciones(interseccion):
-    for idCarrilEntrada, ocupacion in interseccion.carrilesEntrada:
-        ocupacion = random.random()
+    for idCarrilEntrada in interseccion.carrilesEntrada:
+        interseccion.carrilesEntrada[idCarrilEntrada] = random.random()
 
-    for idCarrilSalida, ocupacion in interseccion.carrilesSalida:
-        ocupacion = random.random()
+
+    for idCarrilSalida in interseccion.carrilesSalida:
+        interseccion.carrilesSalida[idCarrilSalida] = random.random()
 
 
