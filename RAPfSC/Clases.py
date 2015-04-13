@@ -80,44 +80,15 @@ class Interseccion:
     def __crucesCompatibles(self):
         print " ++ Calculando los cruces compatibles..."
         # Para cada cruce voy a ver si es compatible los demás
-        cruces = copy.copy(self.cruces)  # Genero una copia del diccionario de cruces
-        compatibles = {}  # Diccionario que contiene una lista de cruces compatibles para cada uno de los cruces
-        for idCruce, cruce in cruces.items():
-            compatibles[idCruce] = [] # Inicializo la lista de cruces compatibles para todos los cruces
-
-        for idCruce, cruce in cruces.items():
-            del cruces[idCruce]  # Saco el cruce actual de la lista de cruces que estoy recorriendo
-
-            segmentosCruce = self.__generarSegmentos(idCruce)
-            for idCandidato, candidato in cruces.items():
-                segmentosCandidato = self.__generarSegmentos(idCandidato)
-                sonCompatibles = True
-
-                for segmentoCruce in segmentosCruce:
-                    for segmentoCandidato in segmentosCandidato:
-                        if self.__segmentosSeCortan(segmentoCruce,segmentoCandidato):
-                            sonCompatibles = False
-                            #print "rompo for 1 :: ",segmentoCandidato
-                            break
-                    if not sonCompatibles:
-                        #print "rompo for 2 :: ",segmentoCruce
-                        break
-
-                if not sonCompatibles:
-                    #print "rompo for 3 :: ",idCandidato
-                    break
-            else:
-                # La compativilidad es simétrica
-                print " +++ Cruces "+idCruce+" y "+idCandidato+" son compatibles!"
-                compatibles[idCruce].append(idCandidato)
-                compatibles[idCandidato].append(idCruce)
-
-        for idCruce, crucesCompatibles in compatibles.items():
-            print " +++ El cruce "+idCruce+" cuenta con "+str(len(crucesCompatibles))+" cruces compatibles:"
-            print "       ",crucesCompatibles
-
+        compatibles = {}
+        for idCruce in self.cruces:
+            candidatosCompatibles = []
+            for idCandidato in self.cruces:
+                if self.__sonCompatibles(idCruce,idCandidato):
+                    candidatosCompatibles.append(idCandidato)
+            compatibles[idCruce] = candidatosCompatibles
+            print " +++ Cruces compatibles con "+idCruce+" :: ",candidatosCompatibles
         return compatibles
-
     # ------------------------
     # Métodos privados de apoyo
     # ------------------------
@@ -130,10 +101,9 @@ class Interseccion:
         for segmento1 in segCruce1:
             for segmento2 in segCruce2:
                 if self.__segmentosSeCortan(segmento1,segmento2):
-                    break
-            else:
-                continue
-            break
+                    return False
+
+        return True
 
     # Evalúa la posición de del punto respecto al segmento calculando el producto cruz / Regla de la mano derecha
     #   Un punto c es una tupla (xc,yc)

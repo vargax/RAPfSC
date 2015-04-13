@@ -17,7 +17,7 @@ class ModeloSolucion:
         self.__recorrerCruces()
         #Luego recorre los grupos que tienen cruces (cruces pueden estar contenidos en 1 o mas grupos), para definir prioridad por grupo
         self._recorrerGrupos()
-        #por ultimo escoge  grupo con la mayor prioridad
+        # por ultimo escoge  grupo con la mayor prioridad
         #estara definido por cantidad de cruces que tenga el grupo la sumatoria de sus prioridades, si hay prioridades no comparables se tomara el que tenga mas cruces
         #prioridad estara definida entre 0 y 1
         self._maximizarPrioridad()

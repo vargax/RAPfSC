@@ -41,4 +41,4 @@ for iteracion in range(0,ITERACIONES):
         vissim.Simulation.RunSingleStep()
     for idInterseccion, interseccion in intersecciones.items():
         escenario.actualizarOcupaciones(interseccion)
-        ModeloSolucion(interseccion)
+        #ModeloSolucion(interseccion)
