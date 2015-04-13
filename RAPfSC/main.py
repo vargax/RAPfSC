@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 __author__ = 'cvargasc'
-
 # ------------------------
 # Imports
 # ------------------------
 import win32com.client as com
 from Clases import Interseccion
+from modelo import ModeloSolucion
 import os
 
 # ------------------------
 # CONSTANTES
 # -----------------------
 RED = "simpleintersection"
-
+ITERACIONES = 100
+PASOS_ENTRE_ITERACIONES = 10
 # ------------------------
 # VARIABLES
 # -----------------------
@@ -33,3 +34,10 @@ for sc in vissim.Net.SignalControllers:
     intersecciones[id] = Interseccion(sc)
 
 print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red "+RED
+
+for iteracion in range(0,ITERACIONES):
+    for pasos in range(0,PASOS_ENTRE_ITERACIONES):
+        vissim.Simulation.RunSingleStep()
+    for idInterseccion, interseccion in intersecciones.items():
+
+        ModeloSolucion(interseccion)

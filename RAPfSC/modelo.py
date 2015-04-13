@@ -1,8 +1,5 @@
-from Clases import Interseccion
-
+# -*- coding: utf-8 -*-
 __author__ = 'tizon'
-
-
 class ModeloSolucion:
     # relacion carriles entrada/salida: 1 mismo flujo; < 1 carril salida congestionado
     # Interseccion.carrilesEntrada
@@ -10,7 +7,12 @@ class ModeloSolucion:
     listPrioridadesCruces = {}
     listPrioridadesGrupos = {}
 
+    def __init__(self, interseccion):
+        self.interseccion = interseccion
+        self._optimizarInterseccion()
+
     def _optimizarInterseccion(self):
+        print "Optimizando la interseccion ",self.interseccion.id
         #primero recorre los cruces para crear directorio de ocupaciones del cruce(es decir prioridad del cruce)
         self.__recorrerCruces()
         #Luego recorre los grupos que tienen cruces (cruces pueden estar contenidos en 1 o mas grupos), para definir prioridad por grupo
@@ -22,7 +24,7 @@ class ModeloSolucion:
 
 
     def __recorrerCruces(self):
-        for id,cruce in Interseccion.cruces.items():
+        for id,cruce in self.interseccion.cruces.items():
             cruce[0].SetAttValue("State","RED")#signal controller: todos los cruces se ponen en rojo para que al final solo quede activado el grupo de cruces prioritarios
             idEntrada = cruce[1] #"id" del carril de entrada
             listSalida=cruce[2] #lista de carriles de salida
@@ -32,7 +34,7 @@ class ModeloSolucion:
             ## prioridad=((cEntrada+(1-csalida))*cEntrada)/maximo
             minCapacidadSalida=1
             for idSalida in listSalida.items():
-                socupacion=Interseccion.carrilesSalida[id]#ocupacion entre 0 y 1
+                socupacion=self.interseccion.carrilesSalida[id]#ocupacion entre 0 y 1
                 scapacidad=1-socupacion #la capaciidad de un carril de salida
                 if scapacidad < minCapacidadSalida:
                     minCapacidadSalida=min(minCapacidadSalida,scapacidad)
@@ -44,7 +46,7 @@ class ModeloSolucion:
             else:
                 max=2
                 ## calculamos prioridad de cruce
-                cEntrada=Interseccion.carrilesEntrada[idEntrada]
+                cEntrada=self.interseccion.carrilesEntrada[idEntrada]
                 prioridad=((minCapacidadSalida+cEntrada)*cEntrada)/max
 
 
@@ -54,7 +56,7 @@ class ModeloSolucion:
     def _recorrerGrupos(self):
 
         #recorre los grupos que es una lista de cruces
-        for id,crucesGrupo in Interseccion.grupos.item():
+        for id,crucesGrupo in self.interseccion.grupos.item():
             ##recorre los cruces del grupo n
             sumPrioridad=0
             for idcruce in crucesGrupo.items():
@@ -75,9 +77,9 @@ class ModeloSolucion:
             elif prioridad == maxprioridad:
                 ##si hay igualdad en prioridades se escoge el grupo con mayor cruces
                 #cantidad de cruces del grupo que fue igual al grupo maximo
-                tamCrucesGrupo=len(Interseccion.grupos[idGrupo][0])
+                tamCrucesGrupo=len(self.interseccion.grupos[idGrupo][0])
                 #cantidad de cruces del grupo maximo guardado anteriormente
-                tamCrucesGrupoMaximo=len(Interseccion.grupos[idGrupoMaximo][0])
+                tamCrucesGrupoMaximo=len(self.interseccion.grupos[idGrupoMaximo][0])
                 if tamCrucesGrupoMaximo < tamCrucesGrupo:
                     #si hay un grupo con mayor prioridad se reemplaza por el anterior
                      idGrupoMaximo=idGrupo
@@ -97,7 +99,7 @@ class ModeloSolucion:
         return self.listPrioridadesGrupos[id]
 
     def _activarGrupo(self,idgrupo):
-        cruces=Interseccion.grupos[idgrupo]
+        cruces=self.interseccion.grupos[idgrupo]
         print "#\n#\n#\n#\n#\n#\n#\n#\n#### id del grupo prioritario es "+idgrupo+" y su prioridad es: "+ self.listPrioridadesGrupos[idgrupo]
         for id,cruce in cruces.item():
              cruce[0].SetAttValue("State","GREEN")#signal controller: todos los cruces del grupo se ponen en verde:grupo con mayor prioridad
