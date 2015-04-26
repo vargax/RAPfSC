@@ -660,7 +660,7 @@
 				<signalOutputConfigurationElement configName="DETEKT" detPort="50" title="" varNo="50" wttFilename="vissim"/>
 			</sigTmsTabConfig>
 		</signalController>
-		<signalController active="true" cycTm="0.000000" cycTmIsVar="true" debug="false" guiFile="VISSIG_GUI.dll" name="1,0" no="2" offset="0.000000" progFile="VISSIG_Controller.dll" progNo="1" scDetRecFile="adhoc2_2.ldp" scDetRecShortNam="false" sigTmsTabAutoConfig="true" supplyFile1="vissig.config" supplyFile2="adhoc22.sig" supplyFile3="" type="FIXEDTIME">
+		<signalController active="true" cycTm="0.000000" cycTmIsVar="true" debug="false" guiFile="VISSIG_GUI.dll" name="1,0" no="2" offset="0.000000" progFile="VISSIG_Controller.dll" progNo="1" scDetRecFile="adhoc2_2.ldp" scDetRecShortNam="false" sigTmsTabAutoConfig="true" supplyFile1="#exe#vissig.config" supplyFile2="#data#adhoc22.sig" supplyFile3="" type="FIXEDTIME">
 			<sGs>
 				<signalGroup amber="3.000000" greenFlsh="0.000000" minGreen="5.000000" minRed="0.000000" name="1,1;1,-1:0,0" no="1" redAmber="0.000000" type="NORMAL"/>
 				<signalGroup amber="3.000000" greenFlsh="0.000000" minGreen="5.000000" minRed="0.000000" name="2,0;1,1" no="2" redAmber="0.000000" type="NORMAL"/>

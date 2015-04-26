@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-__author__ = 'cvargasc'
-import copy
+import itertools
 
+__author__ = 'cvargasc'
 # Una intersección es un SignalController, tiene carriles de entrada, salida, cruces y semáforos.
 class Interseccion:
-
     # ------------------------
     # Atributos
     # ------------------------
@@ -30,7 +29,6 @@ class Interseccion:
 
     # Conjuntos de cruces que se pueden habilitar simultáneamente
     grupos = {}
-
 
     # ------------------------
     # Constructor
@@ -60,38 +58,49 @@ class Interseccion:
                     self.maxVhCarrilesSalida[carrilSalida] = 1 # La cantidad máxima de vehículos vistos en ese carril se inicializa en 1
 
             self.cruces[id] = [sg,carrilEntrada,carrilesSalida]
-            print self.cruces[id]
 
         # Llamo el método para calcular los grupos de cruces que se pueden habilitar simultáneamente
-        self.__calcularGrupos()
+        #self.__calcularGrupos()
 
-        print "\n + Instanciada Interseccion "+self.id+" :: \n    Cruces="+str(len(self.cruces))\
-              + "\n    Carriles Entrada=" + str(len(self.carrilesEntrada))\
-              + "\n    Carriles Salida=" + str(len(self.carrilesSalida))
+        print "\n + Instanciada Interseccion "+self.id+" :: "\
+              + "\n    Carriles Entrada             = " + str(len(self.carrilesEntrada))\
+              + "\n    Carriles Salida              = " + str(len(self.carrilesSalida))\
+              + "\n    Cruces Posibles              = " + str(len(self.cruces))\
+              + "\n    Grupos Cruces Compatibles    = " + str(len(self.grupos))
 
     # ------------------------
     # Métodos privados
     # ------------------------
     # Método encargado de calcular los grupos de cruces que se pueden habilitar simultáneamente
+    # Se calculan todas las combinaciones posibles entre los cruces. Se miran en cuales de estas combinaciones
+    # todos los cruces son compatibles
     def __calcularGrupos(self):
-        self.grupos = self.__crucesCompatibles()
+        print " ++ Calculando las combinaciones posibles de cruces..."
+        combinaciones = []
+        for i in range(1,len(self.cruces)):
+            #print " +++ Generando las combinaciones de "+str(i)+" cruces..."
+            combinaciones.extend(itertools.combinations(self.cruces,i))
+        print " +++ Se generaron "+str(len(combinaciones))+" grupos de cruces posibles..."
 
-    # Dos cruces son compatibles si ninguno de sus segmentos se cortan
-    def __crucesCompatibles(self):
-        print " ++ Calculando los cruces compatibles..."
-        # Para cada cruce voy a ver si es compatible los demás
-        compatibles = {}
-        for idCruce in self.cruces:
-            candidatosCompatibles = []
-            for idCandidato in self.cruces:
-                if self.__sonCompatibles(idCruce,idCandidato):
-                    candidatosCompatibles.append(idCandidato)
-            compatibles[idCruce] = candidatosCompatibles
-            print " +++ Cruces compatibles con "+idCruce+" :: ",candidatosCompatibles
-        return compatibles
+        i = 0
+        for combinacion in combinaciones:
+            if self.__grupoCompatible(combinacion):
+                self.grupos[i] = combinacion
+                print " ++++ Registrado el grupo "+str(i)+" : ",combinacion
+                i += 1
+
+        print " +++ Se identificaron ",len(self.grupos)," grupos de cruces compatibles..."
+
     # ------------------------
     # Métodos privados de apoyo
     # ------------------------
+    # Un grupo se considera compatible si todos los cruces del grupo son compatibles entre ellos
+    def __grupoCompatible(self,grupo):
+        for cruce in grupo:
+            for candidato in grupo:
+                if not self.__sonCompatibles(cruce,candidato):
+                    return False
+        return True
 
     # Evalúa si dos cruces son compatibles. Se consideran compatibles si ninguno de sus segmentos se cortan
     def __sonCompatibles(self,idCruce1,idCruce2):
@@ -102,7 +111,6 @@ class Interseccion:
             for segmento2 in segCruce2:
                 if self.__segmentosSeCortan(segmento1,segmento2):
                     return False
-
         return True
 
     # Evalúa la posición de del punto respecto al segmento calculando el producto cruz / Regla de la mano derecha
@@ -111,8 +119,8 @@ class Interseccion:
     # Devuelve un float:
     #   Si > 0 -> DERECHA | Si < 0 -> IZQUIERDA | Si = 0 -> Sobre el segmento
     def __posicionPtoRespectoSegmento(self, segmento, punto):
-        debug = False
-        if debug: print "  ++++ Determinando donde se encuentra el punto",punto," respecto al segmento ",segmento
+        #debug = False
+        #if debug: print "  ++++ Determinando donde se encuentra el punto",punto," respecto al segmento ",segmento
          # Las coordenadas del segmento
         xa,ya = segmento[0]
         xb,yb = segmento[1]
@@ -122,13 +130,13 @@ class Interseccion:
 
         # Producto Cruz
         respuesta = (xc-xa)*(yb-ya) - (xb-xa)*(yc-ya)
-        if debug:
-            if respuesta < 0:
-                print "  ++++ El punto",punto," se encuentra a la IZQUIERDA del segmento ",segmento
-            elif respuesta == 0:
-                print "  ++++ El punto",punto," se encuentra a la ALINEADO con el segmento ",segmento
-            else:
-                print "  ++++ El punto",punto," se encuentra a la DERECHA del segmento ",segmento
+        # if debug:
+        #     if respuesta < 0:
+        #         print "  ++++ El punto",punto," se encuentra a la IZQUIERDA del segmento ",segmento
+        #     elif respuesta == 0:
+        #         print "  ++++ El punto",punto," se encuentra a la ALINEADO con el segmento ",segmento
+        #     else:
+        #         print "  ++++ El punto",punto," se encuentra a la DERECHA del segmento ",segmento
 
         return respuesta
 
@@ -160,25 +168,25 @@ class Interseccion:
     #
     # Un segmento es una tupla de puntos (a,b) con a = (xa,ya) y b = (xb,yb)
     def __segmentosSeCortan(self,segmento1,segmento2):
-        debug = False
-        if debug: print "  ++++ Determinando si los segmentos ",segmento1," y ",segmento2," se cortan..."
+        #debug = False
+        #if debug: print "  ++++ Determinando si los segmentos ",segmento1," y ",segmento2," se cortan..."
         # Caso en el cual los segmentos son los mismos pero en direcciones opuestas: por ejemplo de norte a sur
         # y de sur a norte
         if segmento1[1] == segmento2[0] and segmento1[0] == segmento2[1]:
-            if debug: print "        |-> NO se cortan :: Son el mismo en direcciones opuestas..."
+            #if debug: print "        |-> NO se cortan :: Son el mismo en direcciones opuestas..."
             return False  # No se cortan, luego son compatibles
 
         # Caso en el cual el punto de origen es el mismo: por ejemplo del norte hacia el sur y del norte hacia
         # el occidente
         if segmento1[0] == segmento2[0]:
-            if debug: print "        |-> NO se cortan :: El punto de origen es el mismo..."
+            #if debug: print "        |-> NO se cortan :: El punto de origen es el mismo..."
             return False  # Salen del mismo sitio, luego son compatibles
 
         # Caso en el cual el origen del primer segmento es el destino del segundo, y el destino del primero está
         # a la derecha del segundo: por ejemplo de norte a sur y de sur a occidente ==> Incluye el primer caso!!
         if segmento1[0] == segmento2[1] and self.__posicionPtoRespectoSegmento(segmento2, segmento1[1]) < 0 \
                 or segmento1[1] == segmento2[0] and self.__posicionPtoRespectoSegmento(segmento1, segmento2[1]):
-            if debug: print "        |-> NO se cortan :: Puntos de origen/destino iguales y destino a la derecha..."
+            #if debug: print "        |-> NO se cortan :: Puntos de origen/destino iguales y destino a la derecha..."
             return False
 
         # Los demás casos:
@@ -188,7 +196,7 @@ class Interseccion:
             posPto1 = self.__posicionPtoRespectoSegmento(segmento1, segmento2[0])
             posPto2 = self.__posicionPtoRespectoSegmento(segmento1, segmento2[1])
             if posPto1*posPto2 <= 0:
-                if debug: print "        |-> SI se cortan :: Los segmentos se cortan..."
+                #if debug: print "        |-> SI se cortan :: Los segmentos se cortan..."
                 return True
-        if debug: print "        |-> NO se cortan :: Los segmentos no se cortan..."
+        #if debug: print "        |-> NO se cortan :: Los segmentos no se cortan..."
         return False

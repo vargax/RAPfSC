@@ -31,14 +31,20 @@ vissim.LoadNet(rutaRed)
 print "\nRecuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
     id = sc.AttValue('Name')
-    print " \n+Procesando SignalController '"+id+"' ..."
-    intersecciones[id] = Interseccion(sc)
+    idVissim = str(sc.AttValue('No'))
+    #print " \n+Procesando SignalController '"+id+"' ..."
+    #intersecciones[id] = Interseccion(sc)
+    for sg in sc.SGs:
+        print "SignalGroup :: No: "+idVissim+"-"+str(sg.AttValue('No'))+" | Name: "+str(sg.AttValue("Name"))
 
-print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red "+RED
+for se in vissim.Net.SignalHeads:
+    print "SignalHead :: No: "+str(se.AttValue("No"))+" | Lane: "+str(se.AttValue("Lane"))+" | SG: "+str(se.AttValue("SG"))
 
-for iteracion in range(0,ITERACIONES):
-    for pasos in range(0,PASOS_ENTRE_ITERACIONES):
-        vissim.Simulation.RunSingleStep()
-    for idInterseccion, interseccion in intersecciones.items():
-        escenario.actualizarOcupaciones(interseccion)
-        #ModeloSolucion(interseccion)
+print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RED+"'"
+
+# for iteracion in range(0,ITERACIONES):
+#     for pasos in range(0,PASOS_ENTRE_ITERACIONES):
+#         vissim.Simulation.RunSingleStep()
+#     for idInterseccion, interseccion in intersecciones.items():
+#         escenario.actualizarOcupaciones(interseccion)
+#         ModeloSolucion(interseccion)

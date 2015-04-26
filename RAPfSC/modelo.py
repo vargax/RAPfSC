@@ -71,7 +71,7 @@ class ModeloSolucion:
                 prioridad=self._darPrioridadCruce(idcruce)
                 ##se suman las prioridades
                 sumPrioridad+=prioridad
-            print "### el grupo"+id+" tiene una prioridad "+ str(sumPrioridad)
+            print "### el grupo"+str(id)+" tiene una prioridad "+ str(sumPrioridad)
             self.listPrioridadesGrupos[id]=sumPrioridad
 
     def _maximizarPrioridad(self):
@@ -97,7 +97,7 @@ class ModeloSolucion:
                      idGrupoMaximo=idGrupo
                      maxprioridad=prioridad
 
-        print "El id del grupo ganador: "+idGrupoMaximo+" Y con prioridad: "+ str(maxprioridad)
+        print "El id del grupo ganador: "+str(idGrupoMaximo)+" Y con prioridad: "+ str(maxprioridad)
         self._activarGrupo(idGrupoMaximo)
 
 
