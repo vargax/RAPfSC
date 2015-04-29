@@ -5,13 +5,15 @@ __author__ = 'cvargasc'
 # ------------------------
 import win32com.client as com
 import os
-from Clases import Interseccion
-from modelo import ModeloSolucion
+from modelo import Interseccion
+from heuristica import ModeloSolucion
 import escenario
 
 # ------------------------
 # CONSTANTES
 # -----------------------
+PATH_REDES = "\\data\\networks\\"
+
 RED = "simpleintersection"
 ITERACIONES = 100
 PASOS_ENTRE_ITERACIONES = 10
@@ -24,7 +26,7 @@ intersecciones = {}
 print "Conectando a VISSIM a través de COM..."
 vissim = com.Dispatch("Vissim.Vissim-32.700") # Vissim 7 - 32 bit
 
-rutaRed = os.getcwd()+"\\data\\networks\\"+RED+"\\"+RED+".inpx"
+rutaRed = os.getcwd()+PATH_REDES+RED+"\\"+RED+".inpx"
 print "Cargando red "+rutaRed+" ..."
 vissim.LoadNet(rutaRed)
 
@@ -32,8 +34,8 @@ print "\nRecuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
     id = sc.AttValue('Name')
     idVissim = str(sc.AttValue('No'))
-    #print " \n+Procesando SignalController '"+id+"' ..."
-    #intersecciones[id] = Interseccion(sc)
+    print " \n+Procesando SignalController '"+id+"' ..."
+    intersecciones[id] = Interseccion(sc)
     for sg in sc.SGs:
         print "SignalGroup :: No: "+idVissim+"-"+str(sg.AttValue('No'))+" | Name: "+str(sg.AttValue("Name"))
 
