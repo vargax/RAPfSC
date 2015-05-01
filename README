@@ -9,10 +9,12 @@ de tráfico VISSIM versión 7.
 
 -   El archivo main.py contiene el script de entrada, el cual establece la comunicación con VISSIM, carga la red e
     instancia una nueva intersección por SignalController en la red.
--   El archivo Clases.py contiene la definición de la clase Intersección, la cual se encarga construir el modelo de
+-   El archivo modelo.py contiene la definición de la clase Intersección, la cual se encarga construir el modelo de
     carriles de entrada, carriles de salida y cruces en función de los nombres definidos en la red con la convención
     del plano cartesiano.
--   El archivo escenario.py genera ocupaciones aleatorias para cada uno de los carriles; se utiliza como mock del
-    simulador para probar el algoritmo de optimización.
--   El archivo modelo.py contiene la clase ModeloSolución, la cual maneja la metaheurística para optimizar el cambio
+-   El archivo escenario.py calcula las ocupaciones para cada uno de los carriles en la intersección (trabajo en curso).
+-   El archivo heurística.py contiene la clase ModeloSolución, la cual maneja la metaheurística para optimizar el cambio
     de los semáforos en función de las ocupaciones de los carriles de entrada y salida de la intersección.
+
+- La carpeta docs contiene los diagramas de módulos y el modelo de clases abstracto propuesto para el experimento.
+- La carpeta data contiene las redes de VISSIM utilizadas en los experimentos.
