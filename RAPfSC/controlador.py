@@ -36,11 +36,11 @@ for sc in vissim.Net.SignalControllers:
     idVissim = str(sc.AttValue('No'))
     print " \n+Procesando SignalController '"+id+"' ..."
     intersecciones[id] = Interseccion(sc)
-    for sg in sc.SGs:
-        print "SignalGroup :: No: "+idVissim+"-"+str(sg.AttValue('No'))+" | Name: "+str(sg.AttValue("Name"))
+    #for sg in sc.SGs:
+    #    print "SignalGroup :: No: "+idVissim+"-"+str(sg.AttValue('No'))+" | Name: "+str(sg.AttValue("Name"))
 
-for se in vissim.Net.SignalHeads:
-    print "SignalHead :: No: "+str(se.AttValue("No"))+" | Lane: "+str(se.AttValue("Lane"))+" | SG: "+str(se.AttValue("SG"))
+#for se in vissim.Net.SignalHeads:
+#    print "SignalHead :: No: "+str(se.AttValue("No"))+" | Lane: "+str(se.AttValue("Lane"))+" | SG: "+str(se.AttValue("SG"))
 
 print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RED+"'"
 
