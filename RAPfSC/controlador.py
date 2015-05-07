@@ -6,15 +6,16 @@ __author__ = 'cvargasc'
 import win32com.client as com
 import os
 from modelo import Interseccion
-from heuristica import ModeloSolucion
-import escenario
+from escenario import Ocupacion
 
 # ------------------------
 # CONSTANTES
 # -----------------------
 PATH_REDES = "\\data\\networks\\"
 
-RED = "simpleintersection"
+#RED = "simpleintersection"
+RED = "wdcsmallgrid"
+
 ITERACIONES = 100
 PASOS_ENTRE_ITERACIONES = 10
 # ------------------------
@@ -30,6 +31,9 @@ rutaRed = os.getcwd()+PATH_REDES+RED+"\\"+RED+".inpx"
 print "Cargando red "+rutaRed+" ..."
 vissim.LoadNet(rutaRed)
 
+print "\nInstanciando Escenario..."
+Ocupacion.inicializar(vissim)
+
 print "\nRecuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
     id = sc.AttValue('Name')
@@ -44,9 +48,11 @@ for sc in vissim.Net.SignalControllers:
 
 print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RED+"'"
 
-# for iteracion in range(0,ITERACIONES):
-#     for pasos in range(0,PASOS_ENTRE_ITERACIONES):
-#         vissim.Simulation.RunSingleStep()
-#     for idInterseccion, interseccion in intersecciones.items():
-#         escenario.actualizarOcupaciones(interseccion)
-#         ModeloSolucion(interseccion)
+for iteracion in range(1,ITERACIONES):
+    print "Iteración "+str(iteracion)+"\n"
+    vissim.Simulation.SetAttValue('SimBreakAt', iteracion*PASOS_ENTRE_ITERACIONES)
+    vissim.Simulation.RunContinuous()
+    Ocupacion.actualizarOcupacion()
+
+
+
