@@ -115,15 +115,3 @@ class ModeloSolucion:
             cruc[0].SetAttValue("State","GREEN") #signal controller: todos los cruces del grupo se ponen en verde:grupo con mayor prioridad
         else:
           print "NO HAY GRUPOS DISPONIBLES"
-
-
-
-
-
-
-
-
-
-
-
-

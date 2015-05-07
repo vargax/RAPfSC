@@ -31,6 +31,7 @@ class Ocupacion:
         # diccionarios, uno indexado por nombre (para recuperarlo desde el modelo) y otro indexado por ID
         # (para actualizarlo desde el escenario)
         # ToDO extender el modelo para soportar carriles de entrada con MÚLTIPLES carriles de salida
+        # ToDo :: IDEA para cruces con más de un carril de salida en la RED colocar el SH en el FromLink en lugar de en el CONNECTOR
         for sh in vissim.Net.SignalHeads:
             idConnector = sh.AttValue('Lane').split('-')[0] # Devuelve el id del link en el cual está ubicado el SignalHead
             connector = vissim.Net.Links.ItemByKey(idConnector)  # a partir del ID recupero el elemento

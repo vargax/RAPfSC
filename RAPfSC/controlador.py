@@ -53,6 +53,3 @@ for iteracion in range(1,ITERACIONES):
     vissim.Simulation.SetAttValue('SimBreakAt', iteracion*PASOS_ENTRE_ITERACIONES)
     vissim.Simulation.RunContinuous()
     Ocupacion.actualizarOcupacion()
-
-
-
