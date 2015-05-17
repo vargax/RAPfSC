@@ -3,16 +3,28 @@
 __author__ = 'cvargasc'
 
 class Ocupacion:
+    # ------------------------
+    # CONSTANTES
+    # -----------------------
+    llaveEntrada = "entrada"
+    llaveConector = "conector"
+    llaveSalida = "salida"
 
+    # ------------------------
+    # ATRIBUTOS GLOBALES
+    # -----------------------
     vissim = None # Referencia a la interfaz COM de Vissim
 
-    linksById   = {} # Diccionario GLOBAL de tripletas indexado por el ID del link --> Necesario para recuperar los datos
-    linksByName = {} # Diccionario GLOBAL de tripletas indexado por el nombre del link --> Es el utilizado en las intersecciones
+    linksById   = {}    # Diccionario GLOBAL de tripletas indexado por el ID del link --> Necesario para recuperar los datos
+    linksByName = {}    # Diccionario GLOBAL de tripletas indexado por el nombre del link --> Es el utilizado en las intersecciones
     # Cada tripleta contiene:
     # |--> pos 0 ocupacion :: La ocupación actual del link, calculada numVh / maxVh
     # |--> pos 1 numVh     :: El número de vehículos actualmente en el link
     # |--> pos 2 maxVh     :: El número máximo de vehículos vistos en el link
 
+    # ------------------------
+    # MÉTODOS
+    # -----------------------
     # En este método se obtienen los IDs de los links en Vissim y se relacionan con los nombres utilizados en el Modelo
     @staticmethod
     def inicializar(vissim):
@@ -55,19 +67,29 @@ class Ocupacion:
             salida = [0.0,0.0,1.0]
 
             # Cada lista se registra en los dos diccionarios
+            # - El id del link es global en la red --> Solo se requiere un índice
             Ocupacion.linksById[idFromLink] = entrada
-            Ocupacion.linksByName[carrilEntrada] = entrada
-
             Ocupacion.linksById[idConnector] = conector
-            Ocupacion.linksByName[nombreSignalGroup] = conector
-
             Ocupacion.linksById[idToLink] = salida
-            Ocupacion.linksByName[carrilesSalida[0]] = salida  # ToDo corregir índice para múltiples carriles de salida
+
+
+            # El nombre del link es local a la intersección
+            # - Se debe indexar por intersección
+            # - Se deben diferenciar carriles de entrada de carriles de salida
+            if idSC not in Ocupacion.linksByName:
+                Ocupacion.linksByName[idSC] = {}
+                Ocupacion.linksByName[idSC][Ocupacion.llaveEntrada] = {}
+                Ocupacion.linksByName[idSC][Ocupacion.llaveConector] = {}
+                Ocupacion.linksByName[idSC][Ocupacion.llaveSalida] = {}
+
+            Ocupacion.linksByName[idSC][Ocupacion.llaveEntrada][carrilEntrada] = entrada
+            Ocupacion.linksByName[idSC][Ocupacion.llaveConector][nombreSignalGroup] = conector
+            Ocupacion.linksByName[idSC][Ocupacion.llaveSalida][carrilesSalida[0]] = salida  # ToDo corregir índice para múltiples carriles de salida
 
     @staticmethod
     def actualizarOcupacion():
         # Restableciendo numVh a cero para todos los links
-        for link in Ocupacion.linksByName.itervalues():
+        for link in Ocupacion.linksById.itervalues():
             link[1] = 0.0
 
         atributosVehiculos = Ocupacion.vissim.Net.Vehicles.GetMultipleAttributes(('No', 'Lane'))
@@ -89,4 +111,4 @@ class Ocupacion:
                 link[2] = link[1]
             link[0] = link[1]/link[2]
 
-        print Ocupacion.linksById
+        print Ocupacion.linksByName

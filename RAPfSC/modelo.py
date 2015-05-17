@@ -16,8 +16,17 @@ class Interseccion:
         # Atributos
         # ------------------------
         self.sc = sc # Defino el SignalController como un atributo de la clase
+        self.id = sc.AttValue('No')  # Recupero y guardo el id del SignalController en la red
         self.nombre = sc.AttValue('Name')  # Recupero y guardo el nombre del SignalController
         print " + Instanciando Interseccion para SignalController "+self.nombre
+
+        # Cada carril tiene un nombre definido por su coordenada y una lista.
+        #  |-> lista[0] = ocupación | lista[1] = numVh | lista[2] = maxVh --> ver escenario.py!
+        # La ocupación se define como la razón entre de carros en el carril y la máxima cantidad de carros vista en el carril
+        #  |-> Debe ser un número entre 0 y 1
+        self.carrilesEntrada = {}  # La coordenada de los carriles de entrada hacen referencia al origen de los vehículos
+        self.conectores = {}       # El link entre el carril de entrada y el carril de salida
+        self.carrilesSalida = {}   # La coordenada de los carriles de salida hacen referencia al destino de los vehículos
 
         # Cada cruce está compuesto por un semáforo (SignalHead), un carril de entrada y un conjunto de carriles de salida
         # cruces[ID] --> El nombre de un cruce es del estilo: 0,1;0,-1:-1,0 Devuelve lista con los elementos del cruce:
@@ -43,6 +52,15 @@ class Interseccion:
             print "\n  ++ Generando Cruce para SignalGroup "+nombreSignalGroup
             carrilEntrada, carrilesSalida = nombreSignalGroup.split(';')[0],nombreSignalGroup.split(';')[1].split(':')
 
+            if not carrilEntrada in self.carrilesEntrada:
+                self.carrilesEntrada[carrilEntrada] = None
+
+            # ToDo manejar lógica similar para los conectores --> Debe ser compatible con múltiples conectores por cruce
+
+            for carrilSalida in carrilesSalida:
+                if not carrilSalida in self.carrilesSalida:
+                    self.carrilesSalida[carrilSalida] = None
+
             self.cruces[nombreSignalGroup] = [sg,carrilEntrada,carrilesSalida]
 
         # Llamo el método para calcular los grupos de cruces que se pueden habilitar simultáneamente
@@ -55,15 +73,25 @@ class Interseccion:
     # ------------------------
     # Métodos públicos
     # ------------------------
+    def vincularCarrilesEscenario(self,carrilesEntrada, conectores, carrilesSalida):
+        for carrilEntrada, lista in carrilesEntrada.iteritems():
+            if not carrilEntrada in self.carrilesEntrada:
+                raise "El carril de entrada "+carrilEntrada+" ya debería estar registrado en la intersección!"
+            self.carrilesEntrada[carrilEntrada] = lista
+
+        for carrilSalida, lista in carrilesSalida.iteritems():
+            if not carrilSalida in self.carrilesSalida:
+                raise "El carril de salida "+carrilSalida+" ya debería estar registrado en la intersección!"
+            self.carrilesSalida[carrilSalida] = lista
+
+        # ToDo realizar verificación para los conectores
+        self.conectores = conectores
+
     def habilitarGrupo(self, idGrupo):
         self.__deshabilitarGrupo(self.idGrupoActual)
         for idCruce in self.grupos[idGrupo]:
             self.cruces[idCruce][0].SetAttValue("State", "GREEN")
         self.idGrupoActual = idGrupo
-
-    def __deshabilitarGrupo(self, idGrupo):
-        for idCruce in self.grupos[idGrupo]:
-            self.cruces[idCruce][0].SetAttValue("State", "RED")
 
     # ------------------------
     # Métodos privados
@@ -91,6 +119,10 @@ class Interseccion:
     # ------------------------
     # Métodos privados de apoyo
     # ------------------------
+    def __deshabilitarGrupo(self, idGrupo):
+        for idCruce in self.grupos[idGrupo]:
+            self.cruces[idCruce][0].SetAttValue("State", "RED")
+
     # Un grupo se considera compatible si todos los cruces del grupo son compatibles entre ellos
     def __grupoCompatible(self,grupo):
         for cruce in grupo:

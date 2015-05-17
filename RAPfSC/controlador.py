@@ -3,10 +3,13 @@ __author__ = 'cvargasc'
 # ------------------------
 # Imports
 # ------------------------
-import win32com.client as com
 import os
+
+import win32com.client as com
+
 from modelo import Interseccion
 from escenario import Ocupacion
+
 
 # ------------------------
 # CONSTANTES
@@ -36,15 +39,25 @@ Ocupacion.inicializar(vissim)
 
 print "\nRecuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
-    id = sc.AttValue('Name')
-    idVissim = str(sc.AttValue('No'))
+    id = str(sc.AttValue('No'))
+    nombre = sc.AttValue('Name')
+
     print " \n+Procesando SignalController '"+id+"' ..."
-    intersecciones[id] = Interseccion(sc)
+    interseccion = Interseccion(sc)
+    intersecciones[id] = interseccion # Registro la intersección en el diccionario...
+
+    print " \n++Vinculando SignalController con sus links en el escenario..."
+    carrilesEntrada = Ocupacion.linksByName[id][Ocupacion.llaveEntrada]
+    conectores = Ocupacion.linksByName[id][Ocupacion.llaveConector]
+    carrilesSalida = Ocupacion.linksByName[id][Ocupacion.llaveSalida]
+    # ToDo ajustar para múltiples carriles de salida
+    interseccion.vincularCarrilesEscenario(carrilesEntrada,conectores,carrilesSalida)
+
     #for sg in sc.SGs:
     #    print "SignalGroup :: No: "+idVissim+"-"+str(sg.AttValue('No'))+" | Name: "+str(sg.AttValue("Name"))
 
-#for se in vissim.Net.SignalHeads:
-#    print "SignalHead :: No: "+str(se.AttValue("No"))+" | Lane: "+str(se.AttValue("Lane"))+" | SG: "+str(se.AttValue("SG"))
+#for sh in vissim.Net.SignalHeads:
+#    print "SignalHead :: No: "+str(sh.AttValue("No"))+" | Lane: "+str(sh.AttValue("Lane"))+" | SG: "+str(sh.AttValue("SG"))
 
 print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RED+"'"
 
@@ -52,4 +65,7 @@ for iteracion in range(1,ITERACIONES):
     print "Iteración "+str(iteracion)+"\n"
     vissim.Simulation.SetAttValue('SimBreakAt', iteracion*PASOS_ENTRE_ITERACIONES)
     vissim.Simulation.RunContinuous()
+
+    # El escenario actualiza las ocupaciones de los links
     Ocupacion.actualizarOcupacion()
+
