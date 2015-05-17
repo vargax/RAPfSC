@@ -102,7 +102,7 @@ class Ocupacion:
             try:
                 Ocupacion.linksById[idLink][1] += 1.0
             except KeyError:
-                print "++ !! Registro TARDÍO del link "+idLink
+              #  print "++ !! Registro TARDÍO del link "+ idLink
                 Ocupacion.linksById[idLink] = [0.0,1.0,1.0]
 
         # Actualizando la ocupación de cada link

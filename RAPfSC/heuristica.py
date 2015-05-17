@@ -6,6 +6,8 @@ class ModeloSolucion:
 
     listPrioridadesCruces = {}
     listPrioridadesGrupos = {}
+    idGrupoGanadorAnterior= ''
+    prioridadGrupoAnterior= 0.0
 
     def __init__(self, interseccion):
         self.interseccion = interseccion
@@ -20,7 +22,7 @@ class ModeloSolucion:
         # por ultimo escoge  grupo con la mayor prioridad
         #estara definido por cantidad de cruces que tenga el grupo la sumatoria de sus prioridades, si hay prioridades no comparables se tomara el que tenga mas cruces
         #prioridad estara definida entre 0 y 1
-        self._maximizarPrioridad()
+      #  self._maximizarPrioridad()
 
 
     def __recorrerCruces(self):
@@ -32,7 +34,7 @@ class ModeloSolucion:
             ## rest.. cEntrada<=1-sum((i),cSalida(i).ocupacion)
             ## prioridad=((cEntrada+(1-csalida))*cEntrada)/maximo
            #
-        #    print str(cEntrada)+"###########"
+           # print str(cEntrada)+"###########"
             minCapacidadSalida=1
             for idSalida in listSalida:
               #      for id,carriles in self.interseccion.carrilesSalida.items():
@@ -45,14 +47,14 @@ class ModeloSolucion:
 
              ## calculamos la maxima prioridad entre el carril de entrada y el minimo carril de gams VER archivo GAMS
             cEntrada=self.interseccion.carrilesEntrada[idEntrada][0]
-            print "### centrada: "+ str(cEntrada)+ "mincapacidad"+ str(minCapacidadSalida)
-            if cEntrada > minCapacidadSalida:
+            cConector= self.interseccion.conectores[id][0]
+            print "$$$ cconector: " +str(cConector) + "### centrada: " + str(cEntrada)+ " mincapacidad "+ str(minCapacidadSalida)
+            if cConector > minCapacidadSalida:
                 prioridad=0.0;
             else:
                 max=2.0
                 ## calculamos prioridad de cruce
-                cEntrada=self.interseccion.carrilesEntrada[idEntrada][0]
-                prioridad=((minCapacidadSalida+cEntrada)*cEntrada)/max
+                prioridad=((minCapacidadSalida+cConector+cEntrada)*(cConector+cEntrada))/max
 
 
             ##agregamos al diccionario id del cruce como llave y su prioridad
@@ -60,7 +62,8 @@ class ModeloSolucion:
             self.listPrioridadesCruces[id]=prioridad
 
     def _recorrerGrupos(self):
-
+        idGrupoMaximo=''
+        maxprioridad=0.0
         #recorre los grupos que es una lista de cruces
         for id,crucesGrupo in self.interseccion.grupos.items():
             ##recorre los cruces del grupo n
@@ -73,31 +76,31 @@ class ModeloSolucion:
             print "### el grupo"+str(id)+" tiene una prioridad "+ str(sumPrioridad)
             self.listPrioridadesGrupos[id]=sumPrioridad
 
-    def _maximizarPrioridad(self):
-        idGrupoMaximo=''
-        maxprioridad=0.0
+            ##maximiza el grupo con mayor prioridad
 
-        for idGrupo,prioridad in self.listPrioridadesGrupos.items():
+            prioridad=sumPrioridad
             if prioridad > maxprioridad:
-                idGrupoMaximo=idGrupo
+                idGrupoMaximo=id
                 maxprioridad=prioridad
             elif prioridad == 0 and prioridad==maxprioridad:
                 #si casualmente el primer gurpo tiene tambn prioridad 0 entonces se reemplaza por los valores defaults para no errores
-                idGrupoMaximo=idGrupo
+                idGrupoMaximo=id
                 maxprioridad=prioridad
             elif prioridad == maxprioridad:
                 ##si hay igualdad en prioridades se escoge el grupo con mayor cruces
                 #cantidad de cruces del grupo que fue igual al grupo maximo
-                tamCrucesGrupo=len(self.interseccion.grupos[idGrupo][0])
+                tamCrucesGrupo=len(crucesGrupo)
                 #cantidad de cruces del grupo maximo guardado anteriormente
                 tamCrucesGrupoMaximo=len(self.interseccion.grupos[idGrupoMaximo][0])
                 if tamCrucesGrupoMaximo < tamCrucesGrupo:
                     #si hay un grupo con mayor prioridad se reemplaza por el anterior
-                     idGrupoMaximo=idGrupo
+                     idGrupoMaximo=id
                      maxprioridad=prioridad
 
         print "El id del grupo ganador: "+str(idGrupoMaximo)+" Y con prioridad: "+ str(maxprioridad)
         self._activarGrupo(idGrupoMaximo)
+
+
 
 
     def _darPrioridadCruce(self,id):
@@ -109,9 +112,5 @@ class ModeloSolucion:
     def _activarGrupo(self,idgrupo):
         if idgrupo!='':
             self.interseccion.habilitarGrupo(idgrupo)
-          # cruces=self.interseccion.grupos[idgrupo]
-          # for idcruce in cruces:
-          #   cruc=self.interseccion.cruces[idcruce]
-          #   cruc[0].SetAttValue("State","GREEN") #signal controller: todos los cruces del grupo se ponen en verde:grupo con mayor prioridad
         else:
           print "NO HAY GRUPOS DISPONIBLES"
