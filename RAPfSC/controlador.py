@@ -9,6 +9,7 @@ import win32com.client as com
 
 from modelo import Interseccion
 from escenario import Ocupacion
+from heuristica import ModeloSolucion
 
 
 # ------------------------
@@ -68,4 +69,8 @@ for iteracion in range(1,ITERACIONES):
 
     # El escenario actualiza las ocupaciones de los links
     Ocupacion.actualizarOcupacion()
+    # La heurística determina el grupo de cruces a habilitar
+    for idInterseccion, interseccion in intersecciones.iteritems():
+        ModeloSolucion(interseccion)
+
 

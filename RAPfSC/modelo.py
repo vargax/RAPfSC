@@ -120,8 +120,13 @@ class Interseccion:
     # Métodos privados de apoyo
     # ------------------------
     def __deshabilitarGrupo(self, idGrupo):
-        for idCruce in self.grupos[idGrupo]:
-            self.cruces[idCruce][0].SetAttValue("State", "RED")
+        # Implementado bajo EAFP https://docs.python.org/2/glossary.html#term-eafp
+        try:
+            for idCruce in self.grupos[idGrupo]:
+                self.cruces[idCruce][0].SetAttValue("State", "RED")
+        except KeyError:
+            if idGrupo != -1: # -1 es el valor de inicialización...
+                raise " !! Grupo "+str(idGrupo)+" inexistente!!"
 
     # Un grupo se considera compatible si todos los cruces del grupo son compatibles entre ellos
     def __grupoCompatible(self,grupo):

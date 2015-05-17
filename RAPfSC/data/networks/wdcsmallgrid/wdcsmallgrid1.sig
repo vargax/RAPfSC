@@ -14,6 +14,9 @@
     </display>
   </signaldisplays>
   <signalsequences>
+    <signalsequence id="1" name="Permanent Red">
+      <state display="1" isFixedDuration="false" isClosed="true" defaultDuration="0" />
+    </signalsequence>
     <signalsequence id="4" name="Red-Green">
       <state display="1" isFixedDuration="false" isClosed="true" defaultDuration="1000" />
       <state display="3" isFixedDuration="false" isClosed="false" defaultDuration="5000" />
@@ -282,6 +285,82 @@
           <cmds>
             <cmd display="1" begin="0" />
             <cmd display="3" begin="1000" />
+          </cmds>
+          <fixedstates />
+        </sg>
+      </sgs>
+    </prog>
+    <prog id="3" cycletime="60000" switchpoint="0" offset="0" intergreens="0" fitness="0.000000" vehicleCount="0" name="allRed">
+      <sgs>
+        <sg sg_id="1" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="2" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="3" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="4" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="5" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="6" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="7" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="8" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="9" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="10" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="11" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
+          </cmds>
+          <fixedstates />
+        </sg>
+        <sg sg_id="12" signal_sequence="1">
+          <cmds>
+            <cmd display="1" begin="0" />
           </cmds>
           <fixedstates />
         </sg>
