@@ -1,0 +1,16 @@
+* 
+*
+* time interval [hh.mm]
+ 0.0  23.59
+* scaling factor:
+ 10000
+* number of zones:
+ 4
+* zones:
+    1   2   3   4
+*
+      0  10  10  10
+     10   0  10  10
+     10  10   0  10
+     10  10  10   0
+  
