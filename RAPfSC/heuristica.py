@@ -14,7 +14,7 @@ class ModeloSolucion:
         self._optimizarInterseccion()
 
     def _optimizarInterseccion(self):
-        print "Optimizando la interseccion ",self.interseccion.id
+        #print "Optimizando la interseccion ",self.interseccion.id
         #primero recorre los cruces para crear directorio de ocupaciones del cruce(es decir prioridad del cruce)
         self.__recorrerCruces()
         #Luego recorre los grupos que tienen cruces (cruces pueden estar contenidos en 1 o mas grupos), para definir prioridad por grupo
@@ -48,7 +48,7 @@ class ModeloSolucion:
              ## calculamos la maxima prioridad entre el carril de entrada y el minimo carril de gams VER archivo GAMS
             cEntrada=self.interseccion.carrilesEntrada[idEntrada][0]
             cConector= self.interseccion.conectores[id][0]
-            print "$$$ cconector: " +str(cConector) + "### centrada: " + str(cEntrada)+ " mincapacidad "+ str(minCapacidadSalida)
+            #print "$$$ cconector: " +str(cConector) + "### centrada: " + str(cEntrada)+ " mincapacidad "+ str(minCapacidadSalida)
             if cConector > minCapacidadSalida:
                 prioridad=0.0;
             else:
@@ -58,7 +58,7 @@ class ModeloSolucion:
 
 
             ##agregamos al diccionario id del cruce como llave y su prioridad
-            print "### el cruce: "+ id+ "tiene una prioridad de"+ str(prioridad)
+            #print "### el cruce: "+ id+ "tiene una prioridad de"+ str(prioridad)
             self.listPrioridadesCruces[id]=prioridad
 
     def _recorrerGrupos(self):
@@ -73,7 +73,7 @@ class ModeloSolucion:
                 prioridad=self._darPrioridadCruce(idcruce)
                 ##se suman las prioridades
                 sumPrioridad+=prioridad
-            print "### el grupo"+str(id)+" tiene una prioridad "+ str(sumPrioridad)
+            #print "### el grupo"+str(id)+" tiene una prioridad "+ str(sumPrioridad)
             self.listPrioridadesGrupos[id]=sumPrioridad
 
             ##maximiza el grupo con mayor prioridad
@@ -97,7 +97,7 @@ class ModeloSolucion:
                      idGrupoMaximo=id
                      maxprioridad=prioridad
 
-        print "El id del grupo ganador: "+str(idGrupoMaximo)+" Y con prioridad: "+ str(maxprioridad)
+        #print "El id del grupo ganador: "+str(idGrupoMaximo)+" Y con prioridad: "+ str(maxprioridad)
         self._activarGrupo(idGrupoMaximo)
 
 
