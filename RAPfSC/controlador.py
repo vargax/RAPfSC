@@ -10,6 +10,7 @@ import win32com.client as com
 from modelo import Interseccion
 from escenario import Ocupacion
 from heuristica import ModeloSolucion
+from multiprocessing import Pool
 
 
 # ------------------------
@@ -26,6 +27,7 @@ PASOS_ENTRE_ITERACIONES = 10
 # VARIABLES
 # -----------------------
 intersecciones = {}
+listModelosSolucion = []
 
 ##  --> INIT --> #######################################################
 print "Conectando a VISSIM a través de COM..."
@@ -62,6 +64,11 @@ for sc in vissim.Net.SignalControllers:
 
 print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RED+"'"
 
+
+
+for idInterseccion,interseccion in intersecciones.iteritems():
+    listModelosSolucion.append(ModeloSolucion(interseccion))
+
 for iteracion in range(1,ITERACIONES):
     print "Iteración "+str(iteracion)+"\n"
     vissim.Simulation.SetAttValue('SimBreakAt', iteracion*PASOS_ENTRE_ITERACIONES)
@@ -70,7 +77,8 @@ for iteracion in range(1,ITERACIONES):
     # El escenario actualiza las ocupaciones de los links
     Ocupacion.actualizarOcupacion()
     # La heurística determina el grupo de cruces a habilitar
-    for idInterseccion, interseccion in intersecciones.iteritems():
-        ModeloSolucion(interseccion)
+    #pool=Pool(processes=9)
+    for modelo in listModelosSolucion:
+       modelo.optimizarInterseccion()
 
 
