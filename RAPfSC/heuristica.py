@@ -13,11 +13,11 @@ class ModeloSolucion:
         self.interseccion = interseccion
 
     def optimizarInterseccion(self):
-        print "Optimizando la interseccion ",self.interseccion.id
+         print "Optimizando la interseccion ",self.interseccion.id
         #primero recorre los cruces para crear directorio de ocupaciones del cruce(es decir prioridad del cruce)
-        self.__recorrerCruces()
+         self.__recorrerCruces()
         #Luego recorre los grupos que tienen cruces (cruces pueden estar contenidos en 1 o mas grupos), para definir prioridad por grupo
-        self._recorrerGrupos()
+         self._recorrerGrupos()
         # por ultimo escoge  grupo con la mayor prioridad
         #estara definido por cantidad de cruces que tenga el grupo la sumatoria de sus prioridades, si hay prioridades no comparables se tomara el que tenga mas cruces
         #prioridad estara definida entre 0 y 1
@@ -35,8 +35,9 @@ class ModeloSolucion:
             minCapacidadSalida=2
             for idSalida in listSalida:
               #      for id,carriles in self.interseccion.carrilesSalida.items():
-             print id+" vs lista salida:"+idSalida
+            # print id+" vs lista salida:"+idSalida
              socupacion=self.interseccion.carrilesSalida[idSalida][0]#ocupacion entre 0 y 1
+             print idSalida +" vs lista salida:"+ str(socupacion)
              scapacidad=1-socupacion #la capaciidad de un carril de salida
              if scapacidad < minCapacidadSalida:
                  minCapacidadSalida=min(minCapacidadSalida,scapacidad)
@@ -45,7 +46,7 @@ class ModeloSolucion:
              ## calculamos la maxima prioridad entre el carril de entrada y el minimo carril de gams VER archivo GAMS
             cEntrada=self.interseccion.carrilesEntrada[idEntrada][0]
             cConector= self.interseccion.conectores[id][0]
-            cOcupEnCon=(cEntrada+cConector)/2
+            cOcupEnCon=(cEntrada+cConector)
             print "$$$ cconector: " +str(cConector) + "### centrada: " + str(cEntrada)+ " mincapacidad "+ str(minCapacidadSalida)
 
             prioridad = self.__calcularPrioridad(cOcupEnCon,minCapacidadSalida)
@@ -56,7 +57,7 @@ class ModeloSolucion:
 
     def __calcularPrioridad(self,entrada,salida):
 
-            max=2.0
+            max=6.0
             ## calculamos prioridad de cruce
             prioridad=((salida + entrada)*(entrada))/max
             return prioridad
@@ -86,8 +87,8 @@ class ModeloSolucion:
                 #si casualmente el primer gurpo tiene tambn prioridad 0 entonces se reemplaza por los valores defaults para no errores
                 idGrupoMaximo=id
                 maxprioridad=prioridad
-            elif id == self.idGrupoGanadorAnterior:
-                continue
+            #elif id == self.idGrupoGanadorAnterior:
+            #    continue
             elif prioridad == maxprioridad:
                 ##si hay igualdad en prioridades se escoge el grupo con mayor cruces
                 #cantidad de cruces del grupo que fue igual al grupo maximo

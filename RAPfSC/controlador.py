@@ -77,10 +77,6 @@ for iteracion in range(1,ITERACIONES):
     # El escenario actualiza las ocupaciones de los links
     Ocupacion.actualizarOcupacion()
     # La heurística determina el grupo de cruces a habilitar
-    procesos = []
+
     for modelo in listModelosSolucion:
-        p = Process(modelo.optimizarInterseccion())
-        p.start()
-        procesos.append(p)
-    for p in procesos:
-        p.join()
+        modelo.optimizarInterseccion()
