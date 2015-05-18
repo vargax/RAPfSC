@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 import itertools
 
+import pythoncom
+import win32com.client as com
+
 __author__ = 'cvargasc'
 # Una intersección es un SignalController, tiene carriles de entrada, salida, cruces y semáforos.
 class Interseccion:
-
     # ------------------------
     # Constructor
     # ------------------------
     # Inicializa la intersección con sus respectivos carriles de entrada, salida y cruces
     # |-> calcula los grupos de cruces compatibles
-    def __init__(self, sc):
-
+    def __init__(self, scComId):
+        pythoncom.CoInitialize()
+        sc = com.Dispatch(pythoncom.CoGetInterfaceAndReleaseStream(scComId, pythoncom.IID_IDispatch))
         # ------------------------
         # Atributos
         # ------------------------

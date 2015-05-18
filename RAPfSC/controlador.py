@@ -4,9 +4,9 @@ __author__ = 'cvargasc'
 # Imports
 # ------------------------
 import os
-from multiprocessing import Process
 
 import win32com.client as com
+import pythoncom
 
 from modelo import Interseccion
 from escenario import Ocupacion
@@ -27,26 +27,30 @@ PASOS_ENTRE_ITERACIONES = 10
 # VARIABLES
 # -----------------------
 intersecciones = {}
-listModelosSolucion = []
+heuristicas = []
 
 ##  --> INIT --> #######################################################
+pythoncom.CoInitialize()
 print "Conectando a VISSIM a través de COM..."
 vissim = com.Dispatch("Vissim.Vissim-32.700") # Vissim 7 - 32 bit
+vissimComId = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, vissim)
 
 rutaRed = os.getcwd()+PATH_REDES+RED+"\\"+RED+".inpx"
 print "Cargando red "+rutaRed+" ..."
 vissim.LoadNet(rutaRed)
 
 print "\nInstanciando Escenario..."
-Ocupacion.inicializar(vissim)
+Ocupacion.inicializar(vissimComId)
 
 print "\nRecuperando SignalControllers..."
 for sc in vissim.Net.SignalControllers:
     id = str(sc.AttValue('No'))
     nombre = sc.AttValue('Name')
 
+    scComId = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, sc)
+
     print " \n+Procesando SignalController '"+id+"' ..."
-    interseccion = Interseccion(sc)
+    interseccion = Interseccion(scComId)
     intersecciones[id] = interseccion # Registro la intersección en el diccionario...
 
     print " \n++Vinculando SignalController con sus links en el escenario..."
@@ -67,7 +71,7 @@ print "\nRecuperadas "+str(len(intersecciones))+" intersecciones de la red '"+RE
 
 
 for idInterseccion,interseccion in intersecciones.iteritems():
-    listModelosSolucion.append(ModeloSolucion(interseccion))
+    heuristicas.append(ModeloSolucion(interseccion))
 
 for iteracion in range(1,ITERACIONES):
     print "Iteración "+str(iteracion)+"\n"
@@ -78,5 +82,11 @@ for iteracion in range(1,ITERACIONES):
     Ocupacion.actualizarOcupacion()
     # La heurística determina el grupo de cruces a habilitar
 
-    for modelo in listModelosSolucion:
+    # procesos = []
+    for modelo in heuristicas:
         modelo.optimizarInterseccion()
+        # p = Process(modelo.optimizarInterseccion())
+    #     p.start()
+    #     procesos.append(p)
+    # for p in procesos:
+    #     p.join()

@@ -104,9 +104,6 @@ class ModeloSolucion:
         print "El id del grupo ganador: "+str(idGrupoMaximo)+" Y con prioridad: "+ str(maxprioridad)
         self._activarGrupo(idGrupoMaximo)
 
-
-
-
     def _darPrioridadCruce(self,id):
         return self.listPrioridadesCruces[id]
 

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'cvargasc'
+import pythoncom
+import win32com.client as com
 
 class Ocupacion:
     # ------------------------
@@ -27,7 +29,9 @@ class Ocupacion:
     # -----------------------
     # En este método se obtienen los IDs de los links en Vissim y se relacionan con los nombres utilizados en el Modelo
     @staticmethod
-    def inicializar(vissim):
+    def inicializar(vissimComId):
+        pythoncom.CoInitialize()
+        vissim = com.Dispatch(pythoncom.CoGetInterfaceAndReleaseStream(vissimComId, pythoncom.IID_IDispatch))
         Ocupacion.vissim = vissim
         # El proceso gira en torno a los SignalHeads, los cuales están siempre ubicados sobre un link de
         # tipo CONNECTOR y asociados a un SignalGroup cuyo nombre representa un Cruce en el modelo. Un
