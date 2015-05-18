@@ -4,13 +4,13 @@ __author__ = 'cvargasc'
 # Imports
 # ------------------------
 import os
+from multiprocessing import Process
 
 import win32com.client as com
 
 from modelo import Interseccion
 from escenario import Ocupacion
 from heuristica import ModeloSolucion
-from multiprocessing import Pool
 
 
 # ------------------------
@@ -77,8 +77,10 @@ for iteracion in range(1,ITERACIONES):
     # El escenario actualiza las ocupaciones de los links
     Ocupacion.actualizarOcupacion()
     # La heurística determina el grupo de cruces a habilitar
-    #pool=Pool(processes=9)
+    procesos = []
     for modelo in listModelosSolucion:
-       modelo.optimizarInterseccion()
-
-
+        p = Process(modelo.optimizarInterseccion())
+        p.start()
+        procesos.append(p)
+    for p in procesos:
+        p.join()
